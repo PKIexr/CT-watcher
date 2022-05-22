@@ -34,3 +34,7 @@ We give recommended parameters for the rest of the configuration items.
 ## domain.csv
 
 Fill in the domains that is the input to CTWatcher.
+
+## run code
+
+python3 main.py
