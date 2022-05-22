@@ -1,8 +1,0 @@
-{
-  "start_time": 1653149208,
-  "end_time": 1653149213,
-  "data": {
-    "code": "bad_credentials",
-    "message": "The provided API key (_********) is not recognized.  Please visit <https://sslmate.com/account/api_keys> to get a valid API key."
-  }
-}
