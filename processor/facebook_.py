@@ -16,8 +16,8 @@ class Facebook:
         self.name = "Facebook"
         self.limit = 1000
         self.__timeout = 20
-        self.__interval_time = 7
-        self.__sleep_time = 1200
+        self.__interval_time = 10
+        self.__sleep_time = 20
         self.token = config.FACEBOOK_TOKEN
 
     def search(self, domain):
