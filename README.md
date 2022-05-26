@@ -38,3 +38,9 @@ Fill in the domains that is the input to CTWatcher.
 ## run code
 
 python3 main.py
+
+## tips
+
+The free account has a query limit, so we recommend not to enter a large domain (e.g., "amazon.com", "microsoft.com", "netflix.com", etc.) as input, otherwise it will take a very long time.
+
+In the source code we give some examples of features.
