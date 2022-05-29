@@ -1,7 +1,7 @@
 # CTWatcher
 Auditing tool for third-party monitors in the CT framework.
 
-At the same time, we built a website (http://ctwatcher.xyz/) to showcase the functions of CTWatcher.
+At the same time, we built a website (https://ctwatcher.xyz/) to showcase the functions of CTWatcher.
 
 # Environment configuration
 
