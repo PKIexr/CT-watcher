@@ -41,7 +41,8 @@ python3 main.py
 
 ## tips
 
-This watcher contains 4 third-party monitors, namely Censys, crt.sh, Facebook Monitor and SSLMate.
+Google Monitor is currently out of service, and Entrust Search has an anti-crawler mechanism.
+Therefore, this watcher contains 4 third-party monitors, namely Censys, crt.sh, Facebook Monitor and SSLMate Spotter. 
 And in the source code we give some examples of features.
 
 The free account has a query frequency limit (e.g., SSLMate can only query 10 pages per hour, which is a maximum of 1,000 certificates), so we recommend not to enter a large domain (e.g., "amazon.com", "microsoft.com", "netflix.com", "qq.com", etc.) as input, otherwise it will take a very long time.
