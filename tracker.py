@@ -10,10 +10,11 @@ class InconsistentCertTracker:
     def construct_reference_set(self):
         for domain in tool.domains():
             file = tool.file_name(domain)
-            for monitor in config.MONITOR_INVOLVED:
-                folder = tool.folder(monitor, tool.PROCESSED_CERT_FOLDER)
-                cert_dict = tool.read_(folder + file)
-                self.__join_reference(domain, monitor, cert_dict)
+            for period in range(1, config.PERIOD_NUM+1):
+                for monitor in config.MONITOR_INVOLVED:
+                    folder = tool.folder(period, monitor, tool.PROCESSED_CERT_FOLDER)
+                    cert_dict = tool.read_(folder + file)
+                    self.__join_reference(domain, monitor, cert_dict)
 
     def __join_reference(self, domain, monitor, cert_dict):
         file = tool.file_name(domain)
@@ -58,23 +59,36 @@ class InconsistentCertTracker:
         for domain in tool.domains():
             file = tool.file_name(domain)
             inconsistent_cert_dict = {}
-            processed_folder = tool.folder(monitor, tool.PROCESSED_CERT_FOLDER)
-            inconsistent_folder = tool.folder(monitor, tool.INCONSISTENT_CERT_FOLDER)
-            search_start_time = tool.read_(processed_folder + file, "start_time")
-            search_end_time = tool.read_(processed_folder + file, "end_time")
-            cert_dict = tool.read_(processed_folder + file)
-            reference_dict = tool.read_(tool.reference_folder() + file)
-            for fingerprint in reference_dict:
-                cert = reference_dict[fingerprint]
-                cert.update({"SearchTime": search_start_time})
-                if (fingerprint not in cert_dict) and (cert["NotAfter"] > search_end_time):
-                    if cert["LoggedTime"] is not None:
-                        if cert["LoggedTime"] < search_start_time:
-                            inconsistent_cert_dict.update({fingerprint: cert})
+            for period in range(1, config.PERIOD_NUM+1):
+                processed_folder = tool.folder(period, monitor, tool.PROCESSED_CERT_FOLDER)
+                irrelevant_folder = tool.folder(period, monitor, tool.IRRELEVANT_CERT_FOLDER)
+                missing_folder = tool.folder(period, monitor, tool.MISSING_CERT_FOLDER)
+                search_start_time = tool.read_(processed_folder + file, "start_time")
+                search_end_time = tool.read_(processed_folder + file, "end_time")
+                cert_dict = tool.read_(processed_folder + file)
+                reference_dict = tool.read_(tool.reference_folder() + file)
+                for fingerprint in reference_dict:
+                    cert = reference_dict[fingerprint]
+                    cert.update({"SearchTime": search_start_time})
+                    if (fingerprint not in cert_dict) and (cert["NotAfter"] > search_end_time):
+                        msd = config.MONITOR_CONFIG[monitor]["MSD"]
+                        if cert["LoggedTime"] is not None:
+                            if cert["LoggedTime"] < search_start_time - 60*60*24*msd:
+                                inconsistent_cert_dict.update({fingerprint: cert})
+                        else:
+                            if cert["NotBefore"] < search_start_time - 60*60*24*msd:
+                                inconsistent_cert_dict.update({fingerprint: cert})
+                irrelevant_cert_dict = {}
+                missing_cert_dict = {}
+                for fingerprint in inconsistent_cert_dict:
+                    cert = inconsistent_cert_dict[fingerprint]
+                    vote = cert["Vote"]
+                    if len(vote) <= 1:
+                        irrelevant_cert_dict.update({fingerprint: cert})
                     else:
-                        if cert["NotBefore"] < search_start_time:
-                            inconsistent_cert_dict.update({fingerprint: cert})
-            tool.write_(inconsistent_folder + file, inconsistent_cert_dict)
+                        missing_cert_dict.update({fingerprint: cert})
+                tool.write_(irrelevant_folder + file, irrelevant_cert_dict)
+                tool.write_(missing_folder + file, missing_cert_dict)
 
     @staticmethod
     def construct_incomplete_output_set(monitor):
@@ -82,29 +96,30 @@ class InconsistentCertTracker:
         total_output_dict = {}
         for domain in tool.domains():
             file = tool.file_name(domain)
-            inconsistent_folder = tool.folder(monitor, tool.INCONSISTENT_CERT_FOLDER)
-            inconsistent_cert_list = tool.read_(inconsistent_folder + file)
-            inconsistent_set_size = len(inconsistent_cert_list)
+            for period in range(1, config.PERIOD_NUM+1):
+                missing_folder = tool.folder(period, monitor, tool.MISSING_CERT_FOLDER)
+                missing_cert_list = tool.read_(missing_folder + file)
+                missing_set_size = len(missing_cert_list)
 
-            processed_folder = tool.folder(monitor, tool.PROCESSED_CERT_FOLDER)
-            processed_cert_list = tool.read_(processed_folder + file)
-            searchable_set_size = len(processed_cert_list)
+                processed_folder = tool.folder(period, monitor, tool.PROCESSED_CERT_FOLDER)
+                processed_cert_list = tool.read_(processed_folder + file)
+                searched_set_size = len(processed_cert_list)
 
-            raw_folder = tool.folder(monitor, tool.RAW_DATA_FOLDER)
-            raw_data_list = tool.read_(raw_folder + file)
-            raw_data_size = len(raw_data_list)
+                raw_folder = tool.folder(period, monitor, tool.RAW_DATA_FOLDER)
+                raw_data_list = tool.read_(raw_folder + file)
+                raw_data_size = len(raw_data_list)
 
-            fingerprint = domain
-            info = {}
-            info.update({"ReferenceSetSize": inconsistent_set_size + searchable_set_size})
-            info.update({"SearchableSetSize": searchable_set_size})
-            info.update({"RawDataSize": raw_data_size})
-            total_output_dict.update({fingerprint: info})
-            if inconsistent_set_size != 0:
-                info.update({"InconsistentSetSize": inconsistent_set_size})
-                incomplete_output_dict.update({fingerprint: info})
-        tool.write_(tool.total_output_set_file(monitor), total_output_dict)
-        tool.write_(tool.incomplete_output_set_file(monitor), incomplete_output_dict)
+                fingerprint = domain
+                info = {}
+                info.update({"ReferenceSetSize": missing_set_size + searched_set_size})
+                info.update({"SearchedSetSize": searched_set_size})
+                info.update({"RawDataSize": raw_data_size})
+                total_output_dict.update({fingerprint: info})
+                if missing_set_size != 0:
+                    info.update({"MissingSetSize": missing_set_size})
+                    incomplete_output_dict.update({fingerprint: info})
+                tool.write_(tool.total_output_set_file(period, monitor), total_output_dict)
+                tool.write_(tool.incomplete_output_set_file(period, monitor), incomplete_output_dict)
 
     @staticmethod
     def reference_set():

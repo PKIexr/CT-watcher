@@ -260,14 +260,14 @@ class CrtSh:
         time_utc = tool.time_to_utc(str(time_datetime))
         return time_utc
 
-    def processor(self, domain):
+    def processor(self, period, domain):
         file = tool.file_name(domain)
         self.connect()
         start_time = int(time.time())
         raw_data_list = self.search(domain)
         end_time = int(time.time())
         self.disconnect()
-        tool.write_(tool.folder(self.name, tool.RAW_DATA_FOLDER) + file, raw_data_list, start_time, end_time)
+        tool.write_(tool.folder(period, self.name, tool.RAW_DATA_FOLDER) + file, raw_data_list, start_time, end_time)
         processed_data_list = self.standardize(raw_data_list, domain)
-        tool.write_(tool.folder(self.name, tool.PROCESSED_CERT_FOLDER) + file, processed_data_list, start_time, end_time)
+        tool.write_(tool.folder(period, self.name, tool.PROCESSED_CERT_FOLDER) + file, processed_data_list, start_time, end_time)
 

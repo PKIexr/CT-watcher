@@ -91,26 +91,27 @@ def file_name(domain):
 
 RAW_DATA_FOLDER = "RawData"
 PROCESSED_CERT_FOLDER = "ProcessedCert"
-INCONSISTENT_CERT_FOLDER = "InconsistentCert"
-ANALYSIS_FOLDER = "Analysis"
+IRRELEVANT_CERT_FOLDER = "IrrelevantCert"
+MISSING_CERT_FOLDER = "MissingCert"
+ANALYSIS_FOLDER = "ServiceLimit"
 
 
-def folder(monitor, name):
-    return config.DATA_ROOT_FOLDER + monitor + "/" + name + "/"
+def folder(period, monitor, name):
+    return config.DATA_ROOT_FOLDER + str(period) + "/" + monitor + "/" + name + "/"
 
 
 def reference_folder():
     return config.DATA_ROOT_FOLDER + "Reference/"
 
 
-def incomplete_output_set_file(monitor):
-    return config.DATA_ROOT_FOLDER + monitor + "/IncompleteOutputSet.json"
+def incomplete_output_set_file(period, monitor):
+    return config.DATA_ROOT_FOLDER + str(period) + "/" + monitor + "/IncompleteOutputSet.json"
 
 
-def total_output_set_file(monitor):
-    return config.DATA_ROOT_FOLDER + monitor + "/TotalOutputSet.json"
+def total_output_set_file(period, monitor):
+    return config.DATA_ROOT_FOLDER + str(period) + "/" + monitor + "/TotalOutputSet.json"
 
 
-def inconsistent_cert_with_feature_file(monitor, name):
-    return folder(monitor, ANALYSIS_FOLDER) + '/' + name + '.json'
+def inconsistent_cert_with_feature_file(period, monitor, name):
+    return folder(period, monitor, ANALYSIS_FOLDER) + '/' + name + '.json'
 

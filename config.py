@@ -3,13 +3,12 @@
 
 DATA_ROOT_FOLDER = "data/"
 
-THRESHOLD = 0.85
+PERIOD_NUM = 1
 
-MONITOR_INVOLVED = ["Censys", "crt.sh", "Facebook", "SSLMate"]
+MONITOR_INVOLVED = ["crt.sh", "Facebook", "SSLMate"]
 MONITOR_CONFIG = {
-    "Censys": {"MSD": 15, "output_limitation": 1000},
-    "crt.sh": {"MSD": 6, "output_limitation": 10000},
-    "Facebook": {"MSD": 4, "output_limitation": 10000},
+    "crt.sh": {"MSD": 2, "output_limitation": 10000},
+    "Facebook": {"MSD": 2, "output_limitation": 10000},
     "SSLMate": {"MSD": 2, "output_limitation": None}
 }
 
