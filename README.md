@@ -1,7 +1,5 @@
 # CT watcher
-This is the artifact for the paper "Certificate Transparency Revisited: The Public Inspections on Third-party Monitors".
-
-# Inconsistency analyzer
+Light Watcher: The Tool for Inspecting Third-party Monitors.
 
 ## Environment configuration
 
@@ -49,35 +47,7 @@ python3 main.py
 Google Monitor is currently out of service, and Entrust Search has an anti-crawler mechanism. Besides, obtaining the required data from Censys is expensive.
 Therefore, this watcher prototype contains 3 third-party monitors, namely crt.sh, Facebook Monitor and SSLMate Spotter. 
 
-# Fault analyzer
 
-## Environment Setup
-
-```bash
-pip install -r requirements.txt
-```
-
-## Run
-
-### Feature Extraction
-
-1. For from-scratch feature extraction, run 
-
-   ```bash
-   python json2csv.py
-   ```
-
-2. The features are already saved in *./CSV*
-
-3. If using pre-saved features, directly run
-
-   ```bash
-   python supervised.py i 1
-   ```
-
-*i* for the monitor id (0-5). It will show a preview of the data distribution and example data columns at first. Then it will run several machine learning classfiers subsequently.
-
-4. For attributing the feature importance, run
 
    ```bash
    python reasoning.py
