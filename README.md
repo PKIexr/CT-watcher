@@ -1,5 +1,5 @@
 # CT watcher
-Light Watcher: The Tool for Inspecting Third-party Monitors.
+Light Watcher: The tool for inspecting third-party monitors in the CT framework.
 
 ## Environment configuration
 
@@ -46,11 +46,3 @@ python3 main.py
 
 Google Monitor is currently out of service, and Entrust Search has an anti-crawler mechanism. Besides, obtaining the required data from Censys is expensive.
 Therefore, this watcher prototype contains 3 third-party monitors, namely crt.sh, Facebook Monitor and SSLMate Spotter. 
-
-
-
-   ```bash
-   python reasoning.py
-   ```
-
-​	The importance of the missed and delayed certificates will be recorded in the *reasons.csv*.
