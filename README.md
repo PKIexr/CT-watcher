@@ -6,10 +6,12 @@ Light Watcher: The tool for inspecting third-party monitors in the CT framework.
 Install python3 (we use Python 3.7) and pip. 
 
 ```bash
-pip install psycopg2-binary
-pip install pyOpenSSL
-pip install urllib3
-pip install publicsuffixlist
+pip install psycopg2-binary (we used version 2.8.4)
+pip install pyOpenSSL (we used version 19.1.0)
+pip install urllib3 (we used version 1.26.8)
+pip install publicsuffixlist (we used version0.6.13)
+pip install schedule (we used version 0.6.0)
+pip install censys (we used version 2.2.3)
 ```
 
 Make sure the network can access the responsive service (e.g., Facebook Graph API).
